@@ -4,119 +4,107 @@ import '../../controllers/splash_controller.dart';
 import '../../utils/app_colors.dart';
 import '../widgets/fade_in_animation.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _logoController;
-  late Animation<double> _scaleAnimation;
-
-  @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
     Get.put(SplashController());
 
-    // Logo pulse/scale animation controller
-    _logoController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    )..repeat(reverse: true);
-
-    _scaleAnimation = Tween<double>(begin: 0.9, end: 1.1).animate(
-      CurvedAnimation(parent: _logoController, curve: Curves.easeInOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _logoController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primary,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Hero + Scale/Pulse Animation for Logo
-            Hero(
-              tag: 'app_logo',
-              child: ScaleTransition(
-                scale: _scaleAnimation,
-                child: Container(
-                  padding: const EdgeInsets.all(22),
-                  decoration: const BoxDecoration(
-                    color: AppColors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 20,
-                        spreadRadius: 5,
+      body: Stack(
+        children: [
+          // Deco 1 (Top Left Translucent Circle Background)
+          Positioned(
+            top: -80,
+            left: -80,
+            child: Container(
+              width: 320,
+              height: 320,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.08),
+              ),
+            ),
+          ),
+
+          // Deco 2 (Bottom Right Translucent Circle Background)
+          Positioned(
+            bottom: -80,
+            right: -80,
+            child: Container(
+              width: 320,
+              height: 320,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.08),
+              ),
+            ),
+          ),
+
+          // Center Logo & Text Content
+          SafeArea(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Hero(
+                    tag: 'app_logo',
+                    child: Container(
+                      width: 96,
+                      height: 96,
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(26),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.12),
+                            blurRadius: 24,
+                            spreadRadius: 2,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
                       ),
-                    ],
+                      child: const Icon(
+                        Icons.check,
+                        size: 52,
+                        color: AppColors.primary,
+                      ),
+                    ),
                   ),
-                  child: const Icon(
-                    Icons.lock_outline,
-                    size: 64,
-                    color: AppColors.primary,
+                  const SizedBox(height: 28),
+
+                  const FadeInAnimation(
+                    delay: 0.2,
+                    child: Text(
+                      'TEST',
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.white,
+                        letterSpacing: 2.0,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 32),
+                  const SizedBox(height: 10),
 
-            // Animated App Title Fade & Slide
-            const FadeInAnimation(
-              delay: 0.2,
-              child: Text(
-                'LIVE TEST APP',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.white,
-                  letterSpacing: 2.0,
-                ),
+                  const FadeInAnimation(
+                    delay: 0.4,
+                    child: Text(
+                      'Plan your day. Achieve more.',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 8),
-
-            // Animated Tagline Fade & Slide
-            const FadeInAnimation(
-              delay: 0.4,
-              child: Text(
-                'Welcome to Flutter App',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.white70,
-                  letterSpacing: 0.5,
-                ),
-              ),
-            ),
-            const SizedBox(height: 48),
-
-            // Animated Circular Progress Bar
-            const FadeInAnimation(
-              delay: 0.6,
-              child: SizedBox(
-                width: 28,
-                height: 28,
-                child: CircularProgressIndicator(
-                  color: AppColors.white,
-                  strokeWidth: 3,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -1,9 +1,12 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
-  // Change this to the provided base URL during live test
-  static const String baseUrl = 'https://example.com/api';
+  static const String baseUrl = 'https://api.fototidy.com/api/v1';
 
-  static const String login = '$baseUrl/login';
-  static const String getData = '$baseUrl/data';
+  // Auth Endpoints
+  static const String login = '$baseUrl/auth/login';
+
+  // Photo / Gallery Endpoints
+  static const String myPhotos = '$baseUrl/upload-photos/my-photos';
+  static const String uploadPhoto = '$baseUrl/upload-photos/my-photos';
 }
